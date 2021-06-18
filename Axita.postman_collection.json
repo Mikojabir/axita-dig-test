@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "5471e31b-515a-4357-9caf-0d1b63580459",
+		"name": "Axita",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "1. Create Product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.test('Create Product', function(){\r",
+									"\r",
+									"let baseURL = pm.environment.get('url')\r",
+									"let token = pm.environment.get('auth')\r",
+									"let getTokenRequest = {\r",
+									"  url: baseURL + \"/public-api/products\",\r",
+									"  method: 'POST',\r",
+									"  header: {\r",
+									"    \"Content-Type\":\"application/json\",\r",
+									"    \"Authorization\": token\r",
+									"  },\r",
+									"  body: {\r",
+									"    raw: JSON.stringify(\r",
+									"        {\r",
+									"        \tname:\"Dipan Minimalis001\",\r",
+									"            description:\"Dipan minimalis dengan kualiatas terbaik menggunakan kayu mindi\",\r",
+									"            image:\"https://www.ayhomefurniture.com/wp-content/uploads/2020/07/20200413154758_IMG_3106-scaled.jpg\",\r",
+									"            price:5000000,\r",
+									"            status: false\r",
+									"        })\r",
+									"  }\r",
+									"}\r",
+									"pm.sendRequest(getTokenRequest, (error, response) => {\r",
+									"\r",
+									"    //set parameter token to env\r",
+									"    let body = response.json()\r",
+									"    let respCode = response.code\r",
+									"        \r",
+									"        //Validasi hasil response body\r",
+									"        if(respCode == 200) {\r",
+									"            console.info(\"Response Code - Passed\")\r",
+									"            console.log(body)\r",
+									"        } else {\r",
+									"            console.error(\"ERROR, Response Code Not Passed\")\r",
+									"            console.log(body)\r",
+									"        }\r",
+									"\r",
+									"    console.info(\"Create Product - Passed\")\r",
+									"     \r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0c89838aa84c84eaad39681bd5eda04b210f11a82189fb8e11c708189b671a59",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Dipan\",\r\n    \"description\": \"Dipan dengan kayu mindi dengan kualitas terbaik\",\r\n    \"image\": \"https://www.ayhomefurniture.com/wp-content/uploads/2020/07/20200413154758_IMG_3106-scaled.jpg\",\r\n    \"price\": 5000000,\r\n    \"status\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/public-api/products",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"public-api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Get Products",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Get Product After Created', function(){\r",
+									"\r",
+									"    let baseURL = pm.environment.get('url')\r",
+									"    let token = pm.environment.get('auth')\r",
+									"    let endpoint = '/public-api/products?id=202'\r",
+									"    let setting = {\r",
+									"        url: baseURL+endpoint,\r",
+									"        method: 'GET',\r",
+									"        header: {\r",
+									"            'Content-Type': 'application/json',\r",
+									"            'Authorization': token\r",
+									"        }\r",
+									"    }\r",
+									"\r",
+									"    pm.sendRequest(getTokenRequest, (error, response) => {\r",
+									"\r",
+									"    const body = response.json();\r",
+									"\r",
+									"    //validation response\r",
+									"    //code\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"\r",
+									"    //validation response body schema\r",
+									"        if(pm.expect(body.code).to.be.a('number') &&\r",
+									"        pm.expect(body.meta).to.be.a(null) &&\r",
+									"        pm.expect(body.data).to.be.an('array') &&\r",
+									"        pm.expect(body.data.id).to.be.a('number') &&\r",
+									"        pm.expect(body.data.name).to.be.a('string') &&\r",
+									"        pm.expect(body.data.description).to.be.a('string') &&\r",
+									"        pm.expect(body.data.image).to.be.a('string') &&\r",
+									"        pm.expect(body.data.price).to.be.a('string') &&\r",
+									"        pm.expect(body.data.discount_amount).to.be.a(null) &&\r",
+									"        pm.expect(body.data.status).to.be.a('boolean') &&\r",
+									"        pm.expect(body.data.categories).to.be.an('array')) {\r",
+									"            console.info('Validation Body is Passed')\r",
+									"            console.log(body)\r",
+									"        } else {\r",
+									"            console.error('Validation body not Passed')\r",
+									"        }; \r",
+									"\r",
+									"    //validation value\r",
+									"        pm.expect(body.data.id).to.eql(202);\r",
+									"        pm.expect(body.data.name).to.eql('Dipan')\r",
+									"        pm.expect(body.data.description).to.eql('Dipan dengan kayu mindi dengan kualitas terbaik')\r",
+									"        pm.expect(body.data.image).to.eql(\"https://www.ayhomefurniture.com/wp-content/uploads/2020/07/20200413154758_IMG_3106-scaled.jpg\")\r",
+									"        pm.expect(body.data.price).to.eql(\"5000000.0\")\r",
+									"        pm.expect(body.data.discount_amount).to.be.a(null)\r",
+									"\r",
+									"\r",
+									"    });\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/public-api/products?id=204",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"public-api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "204"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Update Product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.test('Update Product', function(){\r",
+									"\r",
+									"let baseURL = pm.environment.get('url')\r",
+									"let token = pm.environment.get('auth')\r",
+									"let getTokenRequest = {\r",
+									"  url: baseURL + \"/public-api/products/201\",\r",
+									"  method: 'PUT',\r",
+									"  header: {\r",
+									"    \"Content-Type\":\"application/json\",\r",
+									"    \"Authorization\": token\r",
+									"  },\r",
+									"  body: {\r",
+									"    raw: JSON.stringify(\r",
+									"        {\r",
+									"            status: true,\r",
+									"            discount_amount: 100000\r",
+									"        })\r",
+									"  }\r",
+									"}\r",
+									"pm.sendRequest(getTokenRequest, (error, response) => {\r",
+									"\r",
+									"    //set parameter token to env\r",
+									"    let body = response.json()\r",
+									"    let respCode = response.code\r",
+									"        \r",
+									"        //Validasi hasil response body\r",
+									"        if(respCode == 200) {\r",
+									"            console.info(\"Response Code - Passed\")\r",
+									"            console.log(body)\r",
+									"        } else {\r",
+									"            console.error(\"ERROR, Response Code Not Passed\")\r",
+									"            console.log(body)\r",
+									"        }\r",
+									"     \r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0c89838aa84c84eaad39681bd5eda04b210f11a82189fb8e11c708189b671a59",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": true,\r\n    \"discount_amount\": 100000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/public-api/products/203",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"public-api",
+								"products",
+								"203"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Delete Product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.test('DELETE Product', function(){\r",
+									"\r",
+									"let baseURL = pm.environment.get('url')\r",
+									"let token = pm.environment.get('auth')\r",
+									"let getTokenRequest = {\r",
+									"  url: baseURL + \"/public-api/products/201\",\r",
+									"  method: 'DELETE',\r",
+									"  header: {\r",
+									"    \"Content-Type\":\"application/json\",\r",
+									"    \"Authorization\": token\r",
+									"  }\r",
+									"}\r",
+									"pm.sendRequest(getTokenRequest, (error, response) => {\r",
+									"\r",
+									"    //set parameter token to env\r",
+									"    let body = response.json()\r",
+									"    let respCode = response.code\r",
+									"        \r",
+									"        //Validasi hasil response body\r",
+									"        if(respCode == 200) {\r",
+									"            console.info(\"Response Code - Passed\")\r",
+									"            console.log(body)\r",
+									"        } else {\r",
+									"            console.error(\"ERROR, Response Code Not Passed\")\r",
+									"            console.log(body)\r",
+									"        }\r",
+									"\r",
+									"    console.info(\"DELETE - Passed\")\r",
+									"     \r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0c89838aa84c84eaad39681bd5eda04b210f11a82189fb8e11c708189b671a59",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/public-api/products/203",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"public-api",
+								"products",
+								"203"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
